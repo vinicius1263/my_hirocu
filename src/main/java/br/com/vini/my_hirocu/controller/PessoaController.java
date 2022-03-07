@@ -24,6 +24,14 @@ public class PessoaController {
 
     }
 
+    @PostMapping("/salvar/pessoa/lote")
+    public List<Pessoa>  salvarlote(@RequestBody List<Pessoa> pessoas){
+        for (Pessoa p:pessoas) {
+            pessoaRepository.save(p);
+        }
+        return pessoas;
+    }
+
     @GetMapping("/listar/pessoas")
     public @ResponseBody List<Pessoa> ListarPessoas(Model model){
 
@@ -32,10 +40,30 @@ public class PessoaController {
 
     }
 
+    @GetMapping("/listar/pessoa/{id}")
+    public @ResponseBody Pessoa acharPorId(@PathVariable Long id) {
+        try {
+            return pessoaRepository.findById(id).get();
+        }catch (Exception e){
+
+        }
+
+        return  new Pessoa();
+    }
+
     @PostMapping("/salvar/pessoa")
     public Pessoa  salvar(@RequestBody Pessoa pessoa){
         pessoaRepository.save(pessoa);
         return pessoa;
+    }
+
+    @DeleteMapping("{id}")
+    public @ResponseBody List<Pessoa> delete(@PathVariable Long id){
+        Pessoa pessoa = acharPorId(id);
+
+        pessoaRepository.delete(pessoa);
+
+        return pessoaRepository.findAll();
     }
 
 
